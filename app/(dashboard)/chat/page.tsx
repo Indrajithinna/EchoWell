@@ -481,7 +481,7 @@ export default function ChatPage() {
           )}
 
           <p className="text-xs text-gray-500 mt-2 text-center">
-            MindfulAI is not a replacement for professional therapy. In crisis, call 988.
+            EchoWell is not a replacement for professional therapy. In crisis, call 988.
           </p>
         </div>
       </div>

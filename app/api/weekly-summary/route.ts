@@ -1,13 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
-import { authOptions } from '../auth/[...nextauth]/route'
-import { supabase } from '@/lib/supabase'
+import { authOptions } from '@/lib/auth-options'
+import { supabaseAdmin as supabase } from '@/lib/supabase'
 import OpenAI from 'openai'
 import { subDays, format } from 'date-fns'
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 })
+
+export const dynamic = 'force-dynamic'
 
 export async function GET(req: NextRequest) {
   try {

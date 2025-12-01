@@ -10,9 +10,9 @@ interface MusicGeneratorInlineProps {
   onMusicGenerated?: (audioUrl: string) => void
 }
 
-export default function MusicGeneratorInline({ 
+export default function MusicGeneratorInline({
   conversationContext,
-  onMusicGenerated 
+  onMusicGenerated
 }: MusicGeneratorInlineProps) {
   const [isGenerating, setIsGenerating] = useState(false)
   const [generatedAudioUrl, setGeneratedAudioUrl] = useState<string | null>(null)
@@ -29,7 +29,7 @@ export default function MusicGeneratorInline({
 
   const generateMusic = async (mood: string, style: string) => {
     setIsGenerating(true)
-    
+
     try {
       // Create prompt based on conversation context
       const prompt = `Create therapeutic ${style} music for someone feeling ${mood}. ${conversationContext.slice(0, 200)}`
@@ -51,11 +51,11 @@ export default function MusicGeneratorInline({
       }
 
       const data = await response.json()
-      
+
       // Handle both URL and base64 responses
       const audioUrl = data.audioUrl || `data:audio/wav;base64,${data.audioBase64}`
       setGeneratedAudioUrl(audioUrl)
-      
+
       // Save to music library
       const newMusic = {
         id: Date.now().toString(),
@@ -63,15 +63,15 @@ export default function MusicGeneratorInline({
         audioUrl: audioUrl,
         mood: mood,
         style: style,
-        duration: duration,
+        duration: 60,
         createdAt: new Date().toISOString(),
       }
-      
+
       // Save to localStorage
       const existingMusic = JSON.parse(localStorage.getItem('generatedMusic') || '[]')
       const updatedMusic = [...existingMusic, newMusic]
       localStorage.setItem('generatedMusic', JSON.stringify(updatedMusic))
-      
+
       if (onMusicGenerated) {
         onMusicGenerated(audioUrl)
       }
@@ -167,7 +167,7 @@ export default function MusicGeneratorInline({
               >
                 {isPlaying ? <Pause size={20} /> : <Play size={20} className="ml-1" />}
               </Button>
-              
+
               <div className="flex-1">
                 <p className="font-medium text-gray-900">Your Personalized Music</p>
                 <p className="text-sm text-gray-500">Generated just for you</p>

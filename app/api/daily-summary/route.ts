@@ -1,12 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
-import { authOptions } from '../auth/[...nextauth]/route'
-import { supabase } from '@/lib/supabase'
+import { authOptions } from '@/lib/auth-options'
+import { supabaseAdmin as supabase } from '@/lib/supabase'
+import { MoodLog, VoiceToneLog } from '@/types/database'
 import OpenAI from 'openai'
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 })
+
+export const dynamic = 'force-dynamic'
 
 export async function GET(req: NextRequest) {
   try {
@@ -95,26 +98,30 @@ async function generateDailySummary(userId: string, date: string) {
     .order('created_at', { ascending: true })
 
   // Get mood logs
-  const { data: moodLogs } = await supabase
+  const { data: moodLogsData } = await supabase
     .from('mood_logs')
     .select('mood_score, emotions')
     .eq('user_id', userId)
     .gte('logged_at', startOfDay.toISOString())
     .lte('logged_at', endOfDay.toISOString())
 
+  const moodLogs = (moodLogsData || []) as MoodLog[]
+
   // Get voice tone logs
-  const { data: voiceLogs } = await supabase
+  const { data: voiceLogsData } = await supabase
     .from('voice_tone_logs')
     .select('tone_detected, confidence_score, emotional_state')
     .eq('user_id', userId)
     .gte('recorded_at', startOfDay.toISOString())
     .lte('recorded_at', endOfDay.toISOString())
 
+  const voiceLogs = (voiceLogsData || []) as VoiceToneLog[]
+
   // Analyze conversation quality
   const userMessages = messages?.filter(m => m.role === 'user') || []
-  const conversationQuality = 
+  const conversationQuality =
     userMessages.length < 3 ? 'short' :
-    userMessages.length < 10 ? 'moderate' : 'deep'
+      userMessages.length < 10 ? 'moderate' : 'deep'
 
   // Extract topics and generate insights
   const conversationText = userMessages
@@ -129,7 +136,7 @@ async function generateDailySummary(userId: string, date: string) {
   )
 
   // Calculate metrics
-  const avgMood = moodLogs && moodLogs.length > 0
+  const avgMood = moodLogs.length > 0
     ? moodLogs.reduce((sum, log) => sum + log.mood_score, 0) / moodLogs.length
     : null
 
@@ -160,8 +167,8 @@ async function generateDailySummary(userId: string, date: string) {
 
 async function generateAIInsights(
   conversationText: string,
-  moodLogs: any[],
-  voiceLogs: any[]
+  moodLogs: MoodLog[],
+  voiceLogs: VoiceToneLog[]
 ): Promise<{ text: string; topics: string[] }> {
   if (!conversationText || conversationText.trim().length < 50) {
     return {
@@ -206,9 +213,9 @@ Be warm, non-judgmental, and supportive. Always remain polite and understanding.
   }
 }
 
-function calculateDominantEmotions(moodLogs: any[]) {
+function calculateDominantEmotions(moodLogs: MoodLog[]) {
   const emotionCounts: Record<string, number> = {}
-  
+
   moodLogs.forEach(log => {
     if (log.emotions && Array.isArray(log.emotions)) {
       log.emotions.forEach((emotion: string) => {
@@ -220,7 +227,7 @@ function calculateDominantEmotions(moodLogs: any[]) {
   return emotionCounts
 }
 
-function analyzeVoiceTones(voiceLogs: any[]) {
+function analyzeVoiceTones(voiceLogs: VoiceToneLog[]) {
   if (voiceLogs.length === 0) {
     return {
       avg_tone: 'neutral',

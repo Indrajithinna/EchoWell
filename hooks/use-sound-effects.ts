@@ -2,7 +2,7 @@
 
 import { useCallback, useRef, useEffect } from 'react'
 
-type SoundType = 'success' | 'error' | 'neutral' | 'on' | 'off' | 'nav-left' | 'nav-right' | 'nav-center'
+type SoundType = 'success' | 'error' | 'neutral' | 'on' | 'off' | 'nav-left' | 'nav-right' | 'nav-center' | 'navigate' | 'focus' | 'click' | 'toggle_on' | 'toggle_off' | 'notification'
 
 export function useSoundEffects() {
     const audioContextRef = useRef<AudioContext | null>(null)
@@ -133,6 +133,69 @@ export function useSoundEffects() {
                 gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.1)
                 oscillator.start(now)
                 oscillator.stop(now + 0.1)
+                break
+
+            case 'navigate':
+                // Audio: Soft swipe sound
+                oscillator.type = 'sine'
+                oscillator.frequency.setValueAtTime(300, now)
+                oscillator.frequency.linearRampToValueAtTime(600, now + 0.15)
+                gainNode.gain.setValueAtTime(0.05, now)
+                gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.15)
+                oscillator.start(now)
+                oscillator.stop(now + 0.15)
+                break
+
+            case 'focus':
+                // Soft pop
+                oscillator.type = 'sine'
+                oscillator.frequency.setValueAtTime(300, now)
+                gainNode.gain.setValueAtTime(0.02, now)
+                gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.05)
+                oscillator.start(now)
+                oscillator.stop(now + 0.05)
+                break
+
+            case 'click':
+                // Sharp click
+                oscillator.type = 'square'
+                oscillator.frequency.setValueAtTime(800, now)
+                gainNode.gain.setValueAtTime(0.02, now)
+                gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.03)
+                oscillator.start(now)
+                oscillator.stop(now + 0.03)
+                break
+
+            case 'toggle_on':
+                // Rising pitch
+                oscillator.type = 'sine'
+                oscillator.frequency.setValueAtTime(400, now)
+                oscillator.frequency.linearRampToValueAtTime(600, now + 0.1)
+                gainNode.gain.setValueAtTime(0.05, now)
+                gainNode.gain.linearRampToValueAtTime(0.0, now + 0.1)
+                oscillator.start(now)
+                oscillator.stop(now + 0.1)
+                break
+
+            case 'toggle_off':
+                // Falling pitch
+                oscillator.type = 'sine'
+                oscillator.frequency.setValueAtTime(600, now)
+                oscillator.frequency.linearRampToValueAtTime(400, now + 0.1)
+                gainNode.gain.setValueAtTime(0.05, now)
+                gainNode.gain.linearRampToValueAtTime(0.0, now + 0.1)
+                oscillator.start(now)
+                oscillator.stop(now + 0.1)
+                break
+
+            case 'notification':
+                // Bell-like
+                oscillator.type = 'triangle'
+                oscillator.frequency.setValueAtTime(880, now) // A5
+                gainNode.gain.setValueAtTime(0.1, now)
+                gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.5)
+                oscillator.start(now)
+                oscillator.stop(now + 0.5)
                 break
         }
     }, [])

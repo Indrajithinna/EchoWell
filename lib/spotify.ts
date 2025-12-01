@@ -61,7 +61,7 @@ export async function searchPlaylistsByMood(mood: string, token: string) {
     })
 
     const items = response.data.playlists?.items || []
-    return items.filter(item => item && item.id) // Filter out null/undefined items
+    return items.filter((item: any) => item && item.id) // Filter out null/undefined items
   } catch (error) {
     console.error('Spotify search error:', error)
     throw new Error('Failed to search Spotify playlists')
@@ -111,8 +111,8 @@ export async function getRecommendations(
     const seedArtists = mood === 'calm' || mood === 'anxious'
       ? '4NHQUGzhtTLFvgF5SZesLK,3YQKmKGau1PzlVlkL1iodx,7CajNmpbOovFoOoasH2HaY' // Bonobo, Tycho, Nils Frahm
       : mood === 'energetic'
-      ? '1vCWHaC5f2uS3yhpwWbIA6,4gzpq5DPGxSnKTe4SA8HAU,6M2wZ9GZgrQXHCFfjv46we' // Avicii, Calvin Harris, Daft Punk
-      : '4q3ewBCX7sLwd24euuV69X,1dfeR4HaWDbWqFHLkxsg1d,6qqNVTkY8uBg9cP3Jd7DAH' // Bad Bunny, Queen, Billie Eilish
+        ? '1vCWHaC5f2uS3yhpwWbIA6,4gzpq5DPGxSnKTe4SA8HAU,6M2wZ9GZgrQXHCFfjv46we' // Avicii, Calvin Harris, Daft Punk
+        : '4q3ewBCX7sLwd24euuV69X,1dfeR4HaWDbWqFHLkxsg1d,6qqNVTkY8uBg9cP3Jd7DAH' // Bad Bunny, Queen, Billie Eilish
 
     const response = await axios.get(`${SPOTIFY_API_URL}/recommendations`, {
       headers: {
@@ -126,10 +126,10 @@ export async function getRecommendations(
     })
 
     const tracks = response.data.tracks || []
-    return tracks.filter(track => track && track.id) // Filter out null/undefined tracks
+    return tracks.filter((track: any) => track && track.id) // Filter out null/undefined tracks
   } catch (error) {
     console.error('Spotify recommendations error:', error)
-    
+
     // Return fallback recommendations when Spotify API fails
     return getFallbackRecommendations(mood)
   }
@@ -137,7 +137,7 @@ export async function getRecommendations(
 
 // Fallback recommendations when Spotify API is unavailable
 function getFallbackRecommendations(mood: string) {
-  const fallbackTracks = {
+  const fallbackTracks: Record<string, any[]> = {
     calm: [
       { name: "Weightless", artist: "Marconi Union", id: "fallback1", external_urls: { spotify: "#" } },
       { name: "Clair de Lune", artist: "Claude Debussy", id: "fallback2", external_urls: { spotify: "#" } },
@@ -154,6 +154,6 @@ function getFallbackRecommendations(mood: string) {
       { name: "Happy", artist: "Pharrell Williams", id: "fallback9", external_urls: { spotify: "#" } }
     ]
   }
-  
+
   return fallbackTracks[mood.toLowerCase()] || fallbackTracks.calm
 }

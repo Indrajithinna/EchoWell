@@ -120,16 +120,6 @@ export default function SonicSanctuary({ onClose, onNavigate }: SonicSanctuaryPr
         }
     }
 
-    // Cleanup
-    useEffect(() => {
-        return () => {
-            window.removeEventListener('deviceorientation', handleOrientation)
-            if (audioContextRef.current) {
-                audioContextRef.current.close()
-            }
-        }
-    }, [])
-
     // Calculate closest destination
     const getClosestDestination = () => {
         // Simple distance check on the circle
@@ -150,6 +140,40 @@ export default function SonicSanctuary({ onClose, onNavigate }: SonicSanctuaryPr
     const closest = getClosestDestination()
     const isAligned = Math.abs(closest.angle - heading) < 20 || Math.abs(closest.angle - heading) > 340
 
+    // Keyboard navigation
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'ArrowLeft') {
+                setHeading(prev => {
+                    const next = (prev - 10 + 360) % 360
+                    updateAudioListener(next)
+                    return next
+                })
+            } else if (e.key === 'ArrowRight') {
+                setHeading(prev => {
+                    const next = (prev + 10) % 360
+                    updateAudioListener(next)
+                    return next
+                })
+            } else if (e.key === 'Enter' && isAligned) {
+                onNavigate(closest.id)
+            }
+        }
+
+        window.addEventListener('keydown', handleKeyDown)
+        return () => window.removeEventListener('keydown', handleKeyDown)
+    }, [isAligned, closest])
+
+    // Cleanup
+    useEffect(() => {
+        return () => {
+            window.removeEventListener('deviceorientation', handleOrientation)
+            if (audioContextRef.current) {
+                audioContextRef.current.close()
+            }
+        }
+    }, [])
+
     return (
         <div className="fixed inset-0 z-50 bg-black text-white flex flex-col items-center justify-center p-4">
             <Button
@@ -165,9 +189,15 @@ export default function SonicSanctuary({ onClose, onNavigate }: SonicSanctuaryPr
                     <Headphones size={64} className="mx-auto text-blue-400 animate-pulse" />
                     <h2 className="text-2xl font-bold">Enter Sonic Sanctuary</h2>
                     <p className="max-w-md text-gray-300">
-                        Navigate MindfulAI using 3D sound. Put on headphones, stand up, and physically turn to find your destination.
+                        Navigate EchoWell using 3D sound. Put on headphones, stand up, and physically turn to find your destination.
+                        Or use the Left and Right arrow keys to rotate.
                     </p>
-                    <Button onClick={requestAccess} size="lg" className="bg-white text-black hover:bg-gray-200">
+                    <Button
+                        onClick={requestAccess}
+                        size="lg"
+                        className="bg-white text-black hover:bg-gray-200"
+                        autoFocus
+                    >
                         Start Experience
                     </Button>
                 </div>

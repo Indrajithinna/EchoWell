@@ -1,12 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
-import { authOptions } from '../../../auth/[...nextauth]/route'
-import { supabase } from '@/lib/supabase'
+import { authOptions } from '@/lib/auth-options'
+import { supabaseAdmin as supabase } from '@/lib/supabase'
+import { DailySummary } from '@/types/database'
 import OpenAI from 'openai'
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 })
+
+export const dynamic = 'force-dynamic'
 
 export async function GET(req: NextRequest) {
   try {
@@ -41,19 +44,21 @@ async function generateWeeklySummary(userId: string, date: string) {
   const startOfWeek = new Date(targetDate)
   startOfWeek.setDate(targetDate.getDate() - targetDate.getDay())
   startOfWeek.setHours(0, 0, 0, 0)
-  
+
   const endOfWeek = new Date(startOfWeek)
   endOfWeek.setDate(startOfWeek.getDate() + 6)
   endOfWeek.setHours(23, 59, 59, 999)
 
   // Get daily summaries for the week
-  const { data: dailySummaries } = await supabase
+  const { data: dailySummariesData } = await supabase
     .from('daily_summaries')
     .select('*')
     .eq('user_id', userId)
     .gte('date', startOfWeek.toISOString().split('T')[0])
     .lte('date', endOfWeek.toISOString().split('T')[0])
     .order('date', { ascending: true })
+
+  const dailySummaries = (dailySummariesData || []) as DailySummary[]
 
   if (!dailySummaries || dailySummaries.length === 0) {
     return {
@@ -72,24 +77,24 @@ async function generateWeeklySummary(userId: string, date: string) {
   // Calculate weekly metrics
   const totalConversations = dailySummaries.reduce((sum, day) => sum + day.conversation_count, 0)
   const totalMessages = dailySummaries.reduce((sum, day) => sum + day.total_messages, 0)
-  
+
   const moodScores = dailySummaries
     .filter(day => day.avg_mood_score !== null)
-    .map(day => day.avg_mood_score)
-  
-  const avgDailyMood = moodScores.length > 0 
-    ? moodScores.reduce((sum, score) => sum + score, 0) / moodScores.length 
+    .map(day => day.avg_mood_score as number)
+
+  const avgDailyMood = moodScores.length > 0
+    ? moodScores.reduce((sum, score) => sum + score, 0) / moodScores.length
     : 0
 
   // Calculate emotional growth
   const firstHalfMood = moodScores.slice(0, Math.floor(moodScores.length / 2))
   const secondHalfMood = moodScores.slice(Math.floor(moodScores.length / 2))
-  
-  const firstHalfAvg = firstHalfMood.length > 0 
-    ? firstHalfMood.reduce((sum, score) => sum + score, 0) / firstHalfMood.length 
+
+  const firstHalfAvg = firstHalfMood.length > 0
+    ? firstHalfMood.reduce((sum, score) => sum + score, 0) / firstHalfMood.length
     : 0
-  const secondHalfAvg = secondHalfMood.length > 0 
-    ? secondHalfMood.reduce((sum, score) => sum + score, 0) / secondHalfMood.length 
+  const secondHalfAvg = secondHalfMood.length > 0
+    ? secondHalfMood.reduce((sum, score) => sum + score, 0) / secondHalfMood.length
     : 0
 
   const emotionalGrowth = secondHalfAvg - firstHalfAvg
@@ -128,13 +133,15 @@ async function generateMonthlySummary(userId: string, date: string) {
   endOfMonth.setHours(23, 59, 59, 999)
 
   // Get daily summaries for the month
-  const { data: dailySummaries } = await supabase
+  const { data: dailySummariesData } = await supabase
     .from('daily_summaries')
     .select('*')
     .eq('user_id', userId)
     .gte('date', startOfMonth.toISOString().split('T')[0])
     .lte('date', endOfMonth.toISOString().split('T')[0])
     .order('date', { ascending: true })
+
+  const dailySummaries = (dailySummariesData || []) as DailySummary[]
 
   if (!dailySummaries || dailySummaries.length === 0) {
     return {
@@ -151,29 +158,29 @@ async function generateMonthlySummary(userId: string, date: string) {
 
   // Calculate monthly metrics
   const totalSessions = dailySummaries.reduce((sum, day) => sum + day.conversation_count, 0)
-  
+
   const moodScores = dailySummaries
     .filter(day => day.avg_mood_score !== null)
-    .map(day => day.avg_mood_score)
+    .map(day => day.avg_mood_score as number)
 
   // Calculate mood trend
   const firstWeekMood = moodScores.slice(0, Math.floor(moodScores.length / 4))
   const lastWeekMood = moodScores.slice(-Math.floor(moodScores.length / 4))
-  
-  const firstWeekAvg = firstWeekMood.length > 0 
-    ? firstWeekMood.reduce((sum, score) => sum + score, 0) / firstWeekMood.length 
+
+  const firstWeekAvg = firstWeekMood.length > 0
+    ? firstWeekMood.reduce((sum, score) => sum + score, 0) / firstWeekMood.length
     : 0
-  const lastWeekAvg = lastWeekMood.length > 0 
-    ? lastWeekMood.reduce((sum, score) => sum + score, 0) / lastWeekMood.length 
+  const lastWeekAvg = lastWeekMood.length > 0
+    ? lastWeekMood.reduce((sum, score) => sum + score, 0) / lastWeekMood.length
     : 0
 
-  const moodTrend = lastWeekAvg > firstWeekAvg + 0.5 ? 'improving' 
-    : lastWeekAvg < firstWeekAvg - 0.5 ? 'declining' 
-    : 'stable'
+  const moodTrend = lastWeekAvg > firstWeekAvg + 0.5 ? 'improving'
+    : lastWeekAvg < firstWeekAvg - 0.5 ? 'declining'
+      : 'stable'
 
   // Calculate emotional stability
-  const moodVariance = moodScores.length > 1 
-    ? calculateVariance(moodScores) 
+  const moodVariance = moodScores.length > 1
+    ? calculateVariance(moodScores)
     : 0
   const emotionalStabilityScore = Math.max(0, 1 - moodVariance / 10)
 
@@ -197,7 +204,7 @@ async function generateMonthlySummary(userId: string, date: string) {
   }
 }
 
-async function generateWeeklyInsights(dailySummaries: any[], emotionalGrowth: number) {
+async function generateWeeklyInsights(dailySummaries: DailySummary[], emotionalGrowth: number) {
   const conversationText = dailySummaries
     .map(day => day.ai_insights || '')
     .join(' ')
@@ -239,7 +246,7 @@ Be supportive, encouraging, and focus on growth and progress.`
   }
 }
 
-async function generateMonthlyInsights(dailySummaries: any[], moodTrend: string) {
+async function generateMonthlyInsights(dailySummaries: DailySummary[], moodTrend: string) {
   const conversationText = dailySummaries
     .map(day => day.ai_insights || '')
     .join(' ')

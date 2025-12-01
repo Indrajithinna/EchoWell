@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { TrendingUp, Heart, Calendar, Sparkles } from 'lucide-react'
 import MoodLogger from '@/components/dashboard/mood-logger'
 import MoodChart from '@/components/dashboard/mood-chart'
+import MoodSonifier from '@/components/dashboard/mood-sonifier'
 import StatCard from '@/components/dashboard/stat-card'
 
 interface MoodLog {
@@ -31,7 +32,7 @@ export default function MoodPage() {
     try {
       const response = await fetch(`/api/mood/history?days=${timeRange}`)
       if (!response.ok) throw new Error('Failed to fetch mood data')
-      
+
       const data = await response.json()
       setLogs(data.logs)
       setStats(data.stats)
@@ -74,11 +75,10 @@ export default function MoodPage() {
             <button
               key={days}
               onClick={() => setTimeRange(days)}
-              className={`px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition-all ${
-                timeRange === days
-                  ? 'bg-gradient-to-r from-calm-500 to-zen-500 text-white shadow-md'
-                  : 'bg-white border border-gray-200 text-gray-700 hover:border-calm-300'
-              }`}
+              className={`px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition-all ${timeRange === days
+                ? 'bg-gradient-to-r from-calm-500 to-zen-500 text-white shadow-md'
+                : 'bg-white border border-gray-200 text-gray-700 hover:border-calm-300'
+                }`}
             >
               {days} Days
             </button>
@@ -111,6 +111,9 @@ export default function MoodPage() {
             />
           </div>
         )}
+
+        {/* Mood Sonification */}
+        {logs.length > 0 && <MoodSonifier logs={logs} />}
 
         {/* Main Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

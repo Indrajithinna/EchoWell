@@ -2,8 +2,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { createMoodEntry, getMoodHistory } from '@/lib/db-helpers';
-import { MoodEntry } from '@/types/database';
+import { createMoodEntry, getMoodHistory, MoodEntry } from '@/lib/db-helpers';
 
 export function useMood() {
   const [currentMood, setCurrentMood] = useState<number | null>(null);

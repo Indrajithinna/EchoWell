@@ -3,12 +3,12 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { signOut } from 'next-auth/react'
-import { 
-  Brain, 
-  MessageSquare, 
-  Music, 
-  Heart, 
-  Settings, 
+import {
+  Brain,
+  MessageSquare,
+  Music,
+  Heart,
+  Settings,
   LogOut,
   Target,
   Calendar
@@ -38,13 +38,13 @@ export default function Sidebar() {
             <Brain className="w-6 h-6 text-white" />
           </div>
           <span className="text-xl font-bold bg-gradient-to-r from-calm-600 to-zen-600 bg-clip-text text-transparent">
-            MindfulAI
+            EchoWell
           </span>
         </Link>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 p-4 space-y-1">
+      <nav className="flex-1 p-4 space-y-1" role="navigation" aria-label="Main Navigation">
         {navigation.map((item) => {
           const isActive = pathname === item.href
           const Icon = item.icon
@@ -53,11 +53,10 @@ export default function Sidebar() {
             <Link
               key={item.name}
               href={item.href}
-              className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
-                isActive
-                  ? 'bg-gradient-to-r from-calm-500 to-zen-500 text-white shadow-md'
-                  : 'text-gray-700 hover:bg-gray-100'
-              }`}
+              className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${isActive
+                ? 'bg-gradient-to-r from-calm-500 to-zen-500 text-white shadow-md'
+                : 'text-gray-700 hover:bg-gray-100'
+                }`}
             >
               <Icon size={20} />
               <span className="font-medium">{item.name}</span>

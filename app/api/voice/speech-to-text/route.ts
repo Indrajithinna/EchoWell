@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
-import { authOptions } from '../../auth/[...nextauth]/route'
+import { authOptions } from '@/lib/auth-options'
 import OpenAI from 'openai'
 
 const openai = new OpenAI({
@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
       language: 'en',
     })
 
-    return NextResponse.json({ 
+    return NextResponse.json({
       text: transcription.text,
       language: 'en'
     })

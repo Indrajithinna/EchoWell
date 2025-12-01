@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
-import { authOptions } from '../../auth/[...nextauth]/route'
+import { authOptions } from '@/lib/auth-options'
 import { getChatResponse } from '@/lib/ai'
 import { analyzeVoiceTone, adjustResponseForTone } from '@/lib/voice-analysis'
-import { supabase } from '@/lib/supabase'
+import { supabaseAdmin as supabase } from '@/lib/supabase'
 import OpenAI from 'openai'
 
 const openai = new OpenAI({
@@ -74,7 +74,7 @@ export async function POST(req: NextRequest) {
 
     // 5. Convert AI response to speech with appropriate voice settings
     const voiceSettings = getVoiceSettingsForTone(toneResult.tone)
-    
+
     let audioUrl = ''
     try {
       const mp3 = await openai.audio.speech.create({

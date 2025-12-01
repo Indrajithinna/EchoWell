@@ -293,7 +293,7 @@ export default function ChatInterface() {
     <div className="flex flex-col h-full bg-gray-50">
       {/* Header */}
       <div className="bg-white border-b border-gray-200 p-4">
-        <h1 className="text-lg font-semibold text-gray-900">MindfulAI Chat</h1>
+        <h1 className="text-lg font-semibold text-gray-900">EchoWell Chat</h1>
         <p className="text-sm text-gray-600">Your AI mental wellness companion</p>
         <Button
           variant="ghost"
@@ -315,10 +315,15 @@ export default function ChatInterface() {
       {showCrisisBanner && <CrisisBanner />}
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div
+        className="flex-1 overflow-y-auto p-4 space-y-4"
+        role="log"
+        aria-live="polite"
+        aria-atomic="false"
+      >
         {messages.length === 0 && (
           <div className="text-center text-gray-500 mt-8">
-            <p className="text-lg mb-2">Welcome to MindfulAI</p>
+            <p className="text-lg mb-2">Welcome to EchoWell</p>
             <p className="text-sm">I'm here to listen and provide emotional support. How are you feeling today?</p>
           </div>
         )}
@@ -379,7 +384,7 @@ export default function ChatInterface() {
         </div>
 
         <p className="text-xs text-gray-500 mt-2 text-center">
-          MindfulAI is not a replacement for professional therapy. In crisis? Call 988.
+          EchoWell is not a replacement for professional therapy. In crisis? Call 988.
         </p>
 
         {/* Haptic Breathing (Always available at bottom) */}

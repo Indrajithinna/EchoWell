@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
-import { authOptions } from '../../auth/[...nextauth]/route'
-import { supabase } from '@/lib/supabase'
+import { authOptions } from '@/lib/auth-options'
+import { supabaseAdmin as supabase } from '@/lib/supabase'
+import { MoodLog } from '@/types/database'
+
+export const dynamic = 'force-dynamic'
 
 export async function GET(req: NextRequest) {
   try {
@@ -32,12 +35,13 @@ export async function GET(req: NextRequest) {
     }
 
     // Calculate statistics
-    const avgMood = data.length > 0
-      ? data.reduce((sum, log) => sum + log.mood_score, 0) / data.length
+    const logs = (data || []) as MoodLog[]
+    const avgMood = logs.length > 0
+      ? logs.reduce((sum, log) => sum + log.mood_score, 0) / logs.length
       : 0
 
     const emotionCounts: Record<string, number> = {}
-    data.forEach(log => {
+    logs.forEach(log => {
       log.emotions.forEach((emotion: string) => {
         emotionCounts[emotion] = (emotionCounts[emotion] || 0) + 1
       })

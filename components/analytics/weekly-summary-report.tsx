@@ -42,7 +42,7 @@ export default function WeeklySummaryReport() {
             No Weekly Data Yet
           </h3>
           <p className="text-gray-600 mb-6">
-            Keep using MindfulAI for a few more days to see your weekly insights!
+            Keep using EchoWell for a few more days to see your weekly insights!
           </p>
           <Button onClick={() => window.location.href = '/chat'}>
             Start a Conversation
@@ -158,13 +158,13 @@ export default function WeeklySummaryReport() {
             <p className="text-indigo-900 whitespace-pre-wrap leading-relaxed mb-4">
               {summary.insights.overview}
             </p>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
               <div>
                 <h4 className="font-semibold text-indigo-800 mb-2">Patterns Observed</h4>
                 <p className="text-indigo-900 text-sm">{summary.insights.patterns}</p>
               </div>
-              
+
               <div>
                 <h4 className="font-semibold text-indigo-800 mb-2">Areas of Growth</h4>
                 <p className="text-indigo-900 text-sm">{summary.insights.growth}</p>

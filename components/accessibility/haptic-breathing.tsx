@@ -20,7 +20,7 @@ export default function HapticBreathing() {
             return
         }
 
-        let timeout: NodeJS.Timeout
+
         let isMounted = true
 
         const cycle = async () => {
@@ -56,7 +56,7 @@ export default function HapticBreathing() {
 
         return () => {
             isMounted = false
-            clearTimeout(timeout)
+
             vibrate(0)
         }
     }, [isActive, vibrate])
@@ -80,8 +80,8 @@ export default function HapticBreathing() {
 
             <div className="text-center py-6 bg-gray-50 rounded-md" aria-live="polite">
                 <div className={`text-2xl font-bold transition-all duration-500 ${phase === 'inhale' ? 'text-blue-500 scale-110' :
-                        phase === 'hold' ? 'text-purple-500 scale-100' :
-                            phase === 'exhale' ? 'text-green-500 scale-90' : 'text-gray-400'
+                    phase === 'hold' ? 'text-purple-500 scale-100' :
+                        phase === 'exhale' ? 'text-green-500 scale-90' : 'text-gray-400'
                     }`}>
                     {phase === 'idle' ? 'Press Play' : phase.toUpperCase()}
                 </div>

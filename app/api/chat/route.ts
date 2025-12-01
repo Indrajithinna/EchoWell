@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
-import { authOptions } from '../auth/[...nextauth]/route'
+import { authOptions } from '@/lib/auth-options'
 import { getChatResponse, detectCrisis } from '@/lib/ai'
-import { supabase } from '@/lib/supabase'
+import { supabaseAdmin as supabase } from '@/lib/supabase'
 
 export const dynamic = 'force-dynamic'
 
@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
 
     // Get the last user message
     const lastMessage = messages[messages.length - 1]
-    
+
     // Check for crisis situation
     if (lastMessage.role === 'user' && detectCrisis(lastMessage.content)) {
       const crisisResponse = `I'm really concerned about what you're sharing. Your safety is the most important thing right now.
@@ -55,9 +55,9 @@ I'm here to support you, but I want to make sure you have access to immediate pr
           ])
       }
 
-      return NextResponse.json({ 
+      return NextResponse.json({
         message: crisisResponse,
-        crisis: true 
+        crisis: true
       })
     }
 
@@ -68,7 +68,7 @@ I'm here to support you, but I want to make sure you have access to immediate pr
     if (conversationId) {
       try {
         await saveMessages(conversationId, lastMessage.content, aiResponse)
-        
+
         // Log conversation metrics
         await logConversationMetrics(
           session.user.id,
@@ -86,17 +86,17 @@ I'm here to support you, but I want to make sure you have access to immediate pr
           lastMessage.content,
           aiResponse
         )
-        
+
         // Log conversation metrics
         await logConversationMetrics(
           session.user.id,
           newConversationId,
           [...messages, { role: 'user', content: lastMessage.content }, { role: 'assistant', content: aiResponse }]
         ).catch(console.error)
-        
-        return NextResponse.json({ 
+
+        return NextResponse.json({
           message: aiResponse,
-          conversationId: newConversationId 
+          conversationId: newConversationId
         })
       } catch (e) {
         console.warn('Failed to create conversation, returning response without persistence:', e)

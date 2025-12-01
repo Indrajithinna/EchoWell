@@ -46,7 +46,7 @@ const features = [
 const testimonials = [
   {
     name: 'Sarah M.',
-    text: 'MindfulAI has been a game-changer for managing my anxiety. The AI companion is so understanding and the music therapy really helps me relax.',
+    text: 'EchoWell has been a game-changer for managing my anxiety. The AI companion is so understanding and the music therapy really helps me relax.',
     rating: 5,
   },
   {
@@ -73,7 +73,7 @@ export default function Home() {
                 <Brain className="w-6 h-6 text-white" />
               </div>
               <span className="text-xl font-bold bg-gradient-to-r from-calm-600 to-zen-600 bg-clip-text text-transparent">
-                MindfulAI
+                EchoWell
               </span>
             </div>
             <Link href="/signin">
@@ -86,7 +86,7 @@ export default function Home() {
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 relative overflow-hidden">
         <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
-        
+
         <div className="max-w-7xl mx-auto text-center relative z-10">
           <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur px-4 py-2 rounded-full border border-gray-200 mb-6">
             <Sparkles className="w-4 h-4 text-zen-500" />
@@ -199,7 +199,7 @@ export default function Home() {
             Ready to Start Your Wellness Journey?
           </h2>
           <p className="text-xl text-white/90 mb-10">
-            Join thousands of people improving their mental health with MindfulAI.
+            Join thousands of people improving their mental health with EchoWell.
             Start for free today.
           </p>
           <Link href="/signin">
@@ -220,7 +220,7 @@ export default function Home() {
                 <div className="w-8 h-8 bg-gradient-to-br from-calm-500 to-zen-500 rounded-lg flex items-center justify-center">
                   <Brain className="w-5 h-5 text-white" />
                 </div>
-                <span className="text-lg font-bold">MindfulAI</span>
+                <span className="text-lg font-bold">EchoWell</span>
               </div>
               <p className="text-gray-400 text-sm">
                 Your AI-powered mental wellness companion.
@@ -258,7 +258,7 @@ export default function Home() {
           <div className="border-t border-gray-800 pt-8">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
               <p className="text-sm text-gray-400">
-                © 2024 MindfulAI. All rights reserved.
+                © 2024 EchoWell. All rights reserved.
               </p>
               <div className="flex gap-4 text-gray-400">
                 <a href="#" className="hover:text-white">Twitter</a>

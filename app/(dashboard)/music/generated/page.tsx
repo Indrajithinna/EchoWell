@@ -1,8 +1,9 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Music, Download, Play, Pause, Trash2, Loader2, Clock } from 'lucide-react'
+import { Music, Download, Play, Pause, Trash2, Loader2, Clock, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import { Card, CardContent } from '@/components/ui/card'
 import { useToast } from '@/hooks/use-toast'
 
@@ -21,6 +22,8 @@ export default function GeneratedMusicPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [playingId, setPlayingId] = useState<string | null>(null)
   const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(null)
+  const [prompt, setPrompt] = useState('')
+  const [isGenerating, setIsGenerating] = useState(false)
   const { toast } = useToast()
 
   useEffect(() => {
@@ -31,6 +34,44 @@ export default function GeneratedMusicPage() {
     }
     setIsLoading(false)
   }, [])
+
+  const generateMusic = async () => {
+    if (!prompt.trim()) return
+
+    setIsGenerating(true)
+    try {
+      const response = await fetch('/api/music/generate-from-text', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt, duration: 10 }) // Default 10s for quick generation
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) throw new Error(data.error || 'Generation failed')
+
+      const newMusic: GeneratedMusic = {
+        id: Date.now().toString(),
+        prompt: data.prompt,
+        audioUrl: data.audioUrl,
+        mood: 'custom',
+        style: 'generated',
+        duration: data.duration,
+        createdAt: new Date().toISOString()
+      }
+
+      const updatedLibrary = [newMusic, ...musicLibrary]
+      setMusicLibrary(updatedLibrary)
+      localStorage.setItem('generatedMusic', JSON.stringify(updatedLibrary))
+
+      setPrompt('')
+      toast({ title: 'Success', description: 'Music generated successfully!', variant: 'success' })
+    } catch (error: any) {
+      toast({ title: 'Error', description: error.message, variant: 'error' })
+    } finally {
+      setIsGenerating(false)
+    }
+  }
 
   const togglePlay = (music: GeneratedMusic) => {
     if (playingId === music.id) {
@@ -118,6 +159,48 @@ export default function GeneratedMusicPage() {
           </p>
         </div>
 
+        {/* Generation Section */}
+        <Card className="mb-8 border-purple-200 bg-white/80 backdrop-blur">
+          <CardContent className="p-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-purple-500" />
+              Create New Soundscape
+            </h2>
+            <div className="flex gap-4">
+              <div className="flex-1">
+                <Input
+                  placeholder="Describe the music you want (e.g., 'Peaceful rain with soft piano', 'Upbeat lo-fi beats for focus')"
+                  value={prompt}
+                  onChange={(e) => setPrompt(e.target.value)}
+                  disabled={isGenerating}
+                  className="w-full"
+                  onKeyPress={(e) => e.key === 'Enter' && generateMusic()}
+                />
+              </div>
+              <Button
+                onClick={generateMusic}
+                disabled={isGenerating || !prompt.trim()}
+                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white min-w-[120px]"
+              >
+                {isGenerating ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Creating...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-4 h-4 mr-2" />
+                    Generate
+                  </>
+                )}
+              </Button>
+            </div>
+            <p className="text-xs text-gray-500 mt-2">
+              Powered by ElevenLabs AI. Generation takes about 10-20 seconds.
+            </p>
+          </CardContent>
+        </Card>
+
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <Card>
@@ -152,8 +235,8 @@ export default function GeneratedMusicPage() {
                 <div>
                   <p className="text-sm text-gray-600">Most Used Mood</p>
                   <p className="text-2xl font-bold text-gray-900 capitalize">
-                    {musicLibrary.length > 0 
-                      ? musicLibrary[0].mood 
+                    {musicLibrary.length > 0
+                      ? musicLibrary[0].mood
                       : 'None'
                     }
                   </p>
@@ -197,7 +280,7 @@ export default function GeneratedMusicPage() {
                       )}
                     </button>
                   </div>
-                  
+
                   <div className="absolute top-3 left-3">
                     <span className="px-3 py-1 bg-white/90 rounded-full text-xs font-medium capitalize">
                       {music.mood}

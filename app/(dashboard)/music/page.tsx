@@ -56,14 +56,14 @@ export default function MusicPage() {
       const data = await response.json()
 
       if (viewType === 'recommendations') {
-        const validRecommendations = data.data?.filter(track => track && track.id) || []
+        const validRecommendations = (data.data as Track[])?.filter(track => track && track.id) || []
         setRecommendations(validRecommendations)
         if (validRecommendations.length > 0) {
           setCurrentTrack(validRecommendations[0])
           setCurrentTrackIndex(0)
         }
       } else {
-        const validPlaylists = data.data?.filter(playlist => playlist && playlist.id) || []
+        const validPlaylists = (data.data as Playlist[])?.filter(playlist => playlist && playlist.id) || []
         setPlaylists(validPlaylists)
       }
     } catch (error) {
@@ -220,11 +220,10 @@ export default function MusicPage() {
                     setCurrentTrack(track)
                     setCurrentTrackIndex(index)
                   }}
-                  className={`w-full flex items-center gap-3 p-3 rounded-lg transition-all ${
-                    currentTrackIndex === index
+                  className={`w-full flex items-center gap-3 p-3 rounded-lg transition-all ${currentTrackIndex === index
                       ? 'bg-calm-50 border-2 border-calm-300'
                       : 'hover:bg-gray-50 border-2 border-transparent'
-                  }`}
+                    }`}
                 >
                   <img
                     src={track.album?.images?.[0]?.url || '/placeholder-album.png'}
@@ -259,12 +258,12 @@ export default function MusicPage() {
           (viewType === 'recommendations' && recommendations.length === 0) ||
           (viewType === 'playlists' && playlists.length === 0)
         ) && (
-          <div className="text-center py-12 text-gray-500">
-            <Music className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-            <p>No music found for this mood.</p>
-            <p className="text-sm mt-1">Try selecting a different mood!</p>
-          </div>
-        )}
+            <div className="text-center py-12 text-gray-500">
+              <Music className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+              <p>No music found for this mood.</p>
+              <p className="text-sm mt-1">Try selecting a different mood!</p>
+            </div>
+          )}
       </div>
     </div>
   )
