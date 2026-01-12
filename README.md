@@ -293,5 +293,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 [![GitHub forks](https://img.shields.io/github/forks/SibgathKhan777/newaii?style=social)](https://github.com/SibgathKhan777/newaii)
 [![GitHub watchers](https://img.shields.io/github/watchers/SibgathKhan777/newaii?style=social)](https://github.com/SibgathKhan777/newaii)
 
-</div>#   m i n d f u l - a i  
+</div>#   m i n d f u l - a i 
+ 
  
