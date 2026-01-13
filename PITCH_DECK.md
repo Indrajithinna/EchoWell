@@ -1,12 +1,8 @@
 # 🎯 MindfulAI Investor Pitch Deck
 
 ## Slide 1: Title Slide
-**MindfulAI: The Future of Mental Health**
+**EchoWell: The Future of Mental Health**
 *Revolutionary AI-Powered Mental Wellness Platform*
-
-- **Founder**: Sibgath Khan
-- **Date**: October 2024
-- **Contact**: investors@mindfulai.com
 
 ---
 
@@ -28,7 +24,7 @@
 ---
 
 ## Slide 3: Our Solution
-### MindfulAI: The World's First Emotionally Intelligent Mental Health Companion
+### Echowell: The  Emotionally Intelligent Mental Health Companion
 
 **🧠 Tone-Adaptive AI**
 - Detects emotional state from voice
@@ -219,20 +215,9 @@
 - First-mover advantage
 - Massive market opportunity
 
-**📞 Next Steps**
-- Schedule demo: demo@mindfulai.com
-- Review pitch deck: [Link]
-- Due diligence materials
-- Term sheet discussion
 
 ---
 
-## Slide 15: Contact Information
-### Get in Touch
-- **Email**: investors@mindfulai.com
-- **Website**: [mindfulai.com](https://mindfulai.com)
-- **Demo**: [Try MindfulAI](https://mindfulai.com/demo)
-- **GitHub**: [github.com/SibgathKhan777/newaii](https://github.com/SibgathKhan777/newaii)
 
 ### Thank You
 *Transforming mental health through AI innovation*
