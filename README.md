@@ -1,4 +1,4 @@
-# 🧠 MindfulAI
+# 🧠 EchoWell
 
 <div align="center">
 
@@ -12,7 +12,6 @@
 [![Supabase](https://img.shields.io/badge/Supabase-Real--time-3ECF8E?style=for-the-badge&logo=supabase)](https://supabase.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
-[View Demo](https://mindfulai.com/demo) • [Report Bug](https://github.com/SibgathKhan777/newaii/issues) • [Request Feature](https://github.com/SibgathKhan777/newaii/issues)
 
 </div>
 
@@ -20,7 +19,7 @@
 
 ## 📖 About The Project
 
-**MindfulAI** is a comprehensive mental wellness platform designed to bridge the gap in accessible mental health care. Unlike standard chatbots, MindfulAI utilizes advanced voice analysis to detect emotional nuances (pitch, tone, speech rate) and adapts its responses accordingly.
+**EchoWell** is a comprehensive mental wellness platform designed to bridge the gap in accessible mental health care. Unlike standard chatbots, MindfulAI utilizes advanced voice analysis to detect emotional nuances (pitch, tone, speech rate) and adapts its responses accordingly.
 
 It combines **Google Gemini Pro** for logical reasoning with **OpenAI Whisper** for voice processing to create a truly conversational and empathetic experience.
 
@@ -116,9 +115,6 @@ Follow these steps to set up the project locally.
 - [ ] **Mobile App:** React Native wrapper for iOS/Android.
 - [ ] **Wearable Integration:** Apple Health/Fitbit data sync for biometric stress tracking.
 - [ ] **B2B API:** Expose endpoints for healthcare providers.
-
-See the [open issues](https://github.com/SibgathKhan777/newaii/issues) for a full list of proposed features and known bugs.
-
 ---
 
 ## 🤝 Contributing
