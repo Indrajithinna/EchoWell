@@ -17,6 +17,7 @@ import { Compass } from 'lucide-react'
 interface Message {
   role: 'user' | 'assistant'
   content: string
+  timestamp: Date
 }
 
 export default function ChatInterface() {
@@ -77,7 +78,8 @@ export default function ChatInterface() {
 
     const userMessage: Message = {
       role: 'user',
-      content: inputValue.trim()
+      content: inputValue.trim(),
+      timestamp: new Date()
     }
 
     setMessages(prev => [...prev, userMessage])
@@ -107,7 +109,8 @@ export default function ChatInterface() {
 
       const aiMessage: Message = {
         role: 'assistant',
-        content: data.message
+        content: data.message,
+        timestamp: new Date()
       }
 
       setMessages(prev => [...prev, aiMessage])
