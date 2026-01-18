@@ -19,7 +19,7 @@
 
 ## 📖 About The Project
 
-**EchoWell** is a comprehensive mental wellness platform designed to bridge the gap in accessible mental health care. Unlike standard chatbots, MindfulAI utilizes advanced voice analysis to detect emotional nuances (pitch, tone, speech rate) and adapts its responses accordingly.
+**EchoWell** is a comprehensive mental wellness platform designed to bridge the gap in accessible mental health care. Unlike standard chatbots, EchoWell utilizes advanced voice analysis to detect emotional nuances (pitch, tone, speech rate) and adapts its responses accordingly.
 
 It combines **Google Gemini Pro** for logical reasoning with **OpenAI Whisper** for voice processing to create a truly conversational and empathetic experience.
 
