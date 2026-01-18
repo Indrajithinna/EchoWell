@@ -205,27 +205,64 @@ export function detectCrisis(message: string): boolean {
   const crisisKeywords = [
     'suicide', 'suicidal', 'kill myself', 'end my life', 'want to die',
     'better off dead', 'no reason to live', 'self harm', 'hurt myself',
-    'cut myself', 'overdose', 'end it all'
+    'cut myself', 'overdose', 'end it all', 'pills', 'hanging', 'jumping',
+    'goodbye world', 'don\'t want to be here anymore', 'worthless'
   ]
 
   const lowerMessage = message.toLowerCase()
-  return crisisKeywords.some(keyword => lowerMessage.includes(keyword))
+  
+  // Check for keywords
+  if (crisisKeywords.some(keyword => lowerMessage.includes(keyword))) return true
+
+  // Check for regex patterns (e.g. "i want to kill myself")
+  const crisisPatterns = [
+    /i (want to|am going to) (kill|end) my(self| life)/i,
+    /i (don't|do not) (want to|wanna) live/i,
+    /can't (take|handle) (it|this) any(more| longer)/i,
+    /help (me|someone) (kill|hurt) (themselves|themself|me)/i
+  ]
+
+  return crisisPatterns.some(pattern => pattern.test(message))
 }
 
 // Mood extraction from conversation
 export function extractMoodFromMessage(message: string): number {
-  const positiveWords = ['happy', 'good', 'great', 'better', 'excited', 'joy', 'wonderful']
-  const negativeWords = ['sad', 'depressed', 'anxious', 'worried', 'terrible', 'awful', 'bad']
+  const moods = {
+    positive: {
+      words: ['happy', 'good', 'great', 'better', 'excited', 'joy', 'wonderful', 'amazing', 'excellent', 'fantastic', 'blessed', 'peaceful', 'calm', 'relaxed', 'stable', 'hopeful', 'loved', 'grateful'],
+      weight: 1
+    },
+    intensePositive: {
+      words: ['euphoric', 'ecstatic', 'thrilled', 'overjoyed'],
+      weight: 2
+    },
+    negative: {
+      words: ['sad', 'depressed', 'anxious', 'worried', 'terrible', 'awful', 'bad', 'miserable', 'lonely', 'hopeless', 'tired', 'exhausted', 'hurt', 'pain', 'frustrated', 'angry', 'mad', 'unhappy'],
+      weight: -1
+    },
+    intenseNegative: {
+      words: ['suicidal', 'desperate', 'crushed', 'broken', 'devastated', 'furious'],
+      weight: -2
+    }
+  }
 
   const lowerMessage = message.toLowerCase()
   let score = 5 // Neutral baseline
 
-  positiveWords.forEach(word => {
-    if (lowerMessage.includes(word)) score += 1
+  moods.positive.words.forEach(word => {
+    if (lowerMessage.includes(word)) score += moods.positive.weight
+  })
+  
+  moods.intensePositive.words.forEach(word => {
+    if (lowerMessage.includes(word)) score += moods.intensePositive.weight
   })
 
-  negativeWords.forEach(word => {
-    if (lowerMessage.includes(word)) score -= 1
+  moods.negative.words.forEach(word => {
+    if (lowerMessage.includes(word)) score += moods.negative.weight
+  })
+
+  moods.intenseNegative.words.forEach(word => {
+    if (lowerMessage.includes(word)) score += moods.intenseNegative.weight
   })
 
   return Math.max(1, Math.min(10, score))
