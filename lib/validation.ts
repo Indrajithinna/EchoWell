@@ -104,3 +104,59 @@ export function validateApiKey(key: string, prefix: string): ValidationResult {
 
     return { isValid: true }
 }
+
+/**
+ * Validates password strength
+ */
+export function validatePassword(password: string): ValidationResult & { strength?: 'weak' | 'medium' | 'strong' } {
+    if (!password || password.length === 0) {
+        return { isValid: false, error: 'Password is required' }
+    }
+
+    if (password.length < 8) {
+        return { isValid: false, error: 'Password must be at least 8 characters long' }
+    }
+
+    const hasUpperCase = /[A-Z]/.test(password)
+    const hasLowerCase = /[a-z]/.test(password)
+    const hasNumbers = /\d/.test(password)
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password)
+
+    const criteriaMet = [hasUpperCase, hasLowerCase, hasNumbers, hasSpecialChar].filter(Boolean).length
+
+    if (criteriaMet < 3) {
+        return {
+            isValid: false,
+            error: 'Password must contain at least 3 of: uppercase, lowercase, numbers, special characters',
+            strength: 'weak'
+        }
+    }
+
+    const strength = criteriaMet === 4 ? 'strong' : 'medium'
+
+    return { isValid: true, strength }
+}
+
+/**
+ * Validates username format
+ */
+export function validateUsername(username: string): ValidationResult {
+    if (!username || username.trim().length === 0) {
+        return { isValid: false, error: 'Username is required' }
+    }
+
+    if (username.length < 3) {
+        return { isValid: false, error: 'Username must be at least 3 characters long' }
+    }
+
+    if (username.length > 30) {
+        return { isValid: false, error: 'Username must be less than 30 characters' }
+    }
+
+    const usernameRegex = /^[a-zA-Z0-9_-]+$/
+    if (!usernameRegex.test(username)) {
+        return { isValid: false, error: 'Username can only contain letters, numbers, underscores, and hyphens' }
+    }
+
+    return { isValid: true }
+}
