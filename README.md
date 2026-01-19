@@ -107,6 +107,54 @@ Follow these steps to set up the project locally.
 
 ---
 
+## 📚 Utility Libraries
+
+EchoWell includes a comprehensive set of utility libraries to streamline development:
+
+### Core Utilities
+
+* **`lib/api-client.ts`** - HTTP client with retry logic, timeout support, and request/response interceptors
+* **`lib/error-handling.ts`** - Custom error classes and error handling utilities
+* **`lib/validation.ts`** - Input validation functions for emails, passwords, messages, and more
+* **`lib/logger.ts`** - Structured logging with different log levels
+
+### Performance & Optimization
+
+* **`lib/cache.ts`** - In-memory caching with TTL support
+* **`lib/rate-limiter.ts`** - Rate limiting for API protection
+* **`lib/performance.ts`** - Performance monitoring and metrics tracking
+
+### Data Formatting
+
+* **`lib/date-utils.ts`** - Date formatting, timezone conversion, and relative time utilities
+* **`lib/string-utils.ts`** - String manipulation (slugify, truncate, case conversion, etc.)
+
+### Example Usage
+
+```typescript
+import { api } from '@/lib/api-client'
+import { formatDate, getRelativeTime } from '@/lib/date-utils'
+import { validateEmail } from '@/lib/validation'
+import { apiCache } from '@/lib/cache'
+
+// Make API calls with automatic retry
+const response = await api.get('/users', { retry: true })
+
+// Format dates
+const formatted = formatDate(new Date(), 'long')
+const relative = getRelativeTime(someDate)
+
+// Validate inputs
+const emailValidation = validateEmail('user@example.com')
+
+// Cache expensive operations
+const data = await apiCache.getOrSet('users', async () => {
+  return await fetchUsers()
+})
+```
+
+---
+
 ## 🗺️ Roadmap
 
 - [x] **Core Platform:** Emotional Intelligence engine & Voice Analysis.
