@@ -13,9 +13,14 @@ export interface RequestOptions extends RequestInit {
     maxRetries?: number
 }
 
+export type RequestInterceptor = (config: RequestOptions) => RequestOptions | Promise<RequestOptions>
+export type ResponseInterceptor = <T>(response: ApiResponse<T>) => ApiResponse<T> | Promise<ApiResponse<T>>
+
 export class ApiClient {
     private baseUrl: string
     private defaultHeaders: HeadersInit
+    private requestInterceptors: RequestInterceptor[] = []
+    private responseInterceptors: ResponseInterceptor[] = []
 
     constructor(baseUrl: string = '', defaultHeaders: HeadersInit = {}) {
         this.baseUrl = baseUrl
@@ -26,19 +31,39 @@ export class ApiClient {
     }
 
     /**
+     * Adds a request interceptor
+     */
+    addRequestInterceptor(interceptor: RequestInterceptor): void {
+        this.requestInterceptors.push(interceptor)
+    }
+
+    /**
+     * Adds a response interceptor
+     */
+    addResponseInterceptor(interceptor: ResponseInterceptor): void {
+        this.responseInterceptors.push(interceptor)
+    }
+
+    /**
      * Makes an HTTP request with timeout and retry support
      */
     private async request<T>(
         endpoint: string,
         options: RequestOptions = {}
     ): Promise<ApiResponse<T>> {
+        // Apply request interceptors
+        let processedOptions = options
+        for (const interceptor of this.requestInterceptors) {
+            processedOptions = await interceptor(processedOptions)
+        }
+
         const {
             timeout = 30000,
             retry = false,
             maxRetries = 3,
             headers,
             ...fetchOptions
-        } = options
+        } = processedOptions
 
         const url = `${this.baseUrl}${endpoint}`
         const startTime = Date.now()
@@ -66,8 +91,10 @@ export class ApiClient {
 
                 const data = await response.json()
 
+                let result: ApiResponse<T>
+
                 if (!response.ok) {
-                    return {
+                    result = {
                         success: false,
                         error: {
                             code: data.code || 'API_ERROR',
@@ -75,22 +102,29 @@ export class ApiClient {
                             statusCode: response.status,
                         },
                     }
+                } else {
+                    result = {
+                        success: true,
+                        data: data.data || data,
+                        metadata: {
+                            timestamp: new Date().toISOString(),
+                        },
+                    }
                 }
 
-                return {
-                    success: true,
-                    data: data.data || data,
-                    metadata: {
-                        timestamp: new Date().toISOString(),
-                    },
+                // Apply response interceptors
+                for (const interceptor of this.responseInterceptors) {
+                    result = await interceptor(result)
                 }
+
+                return result
             } catch (error) {
                 clearTimeout(timeoutId)
 
                 if (error instanceof Error) {
                     logger.error('API request failed', error, { url, method: fetchOptions.method })
 
-                    return {
+                    let result: ApiResponse<T> = {
                         success: false,
                         error: {
                             code: 'NETWORK_ERROR',
@@ -98,6 +132,13 @@ export class ApiClient {
                             statusCode: 0,
                         },
                     }
+
+                    // Apply response interceptors even for errors
+                    for (const interceptor of this.responseInterceptors) {
+                        result = await interceptor(result)
+                    }
+
+                    return result
                 }
 
                 throw error
