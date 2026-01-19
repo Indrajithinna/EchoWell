@@ -65,7 +65,7 @@ Follow these steps to set up the project locally.
 1.  **Clone the repository**
     ```bash
     git clone [https://github.com/Indrajithinna/Echowell.git]
-    cd mindful-ai
+    cd EchoWell
     ```
 
 2.  **Install dependencies**
