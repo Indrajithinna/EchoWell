@@ -46,3 +46,82 @@ export function formatRelativeTime(date: string | Date): string {
   if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}d ago`
   return formatDate(date)
 }
+
+/**
+ * Truncates text to a specified length with ellipsis
+ */
+export function truncateText(text: string, maxLength: number): string {
+  if (text.length <= maxLength) return text
+  return text.slice(0, maxLength - 3) + '...'
+}
+
+/**
+ * Debounces a function call
+ */
+export function debounce<T extends (...args: any[]) => any>(
+  func: T,
+  waitMs: number
+): (...args: Parameters<T>) => void {
+  let timeoutId: ReturnType<typeof setTimeout> | null = null
+
+  return function (...args: Parameters<T>) {
+    if (timeoutId) clearTimeout(timeoutId)
+    timeoutId = setTimeout(() => func(...args), waitMs)
+  }
+}
+
+/**
+ * Throttles a function call
+ */
+export function throttle<T extends (...args: any[]) => any>(
+  func: T,
+  limitMs: number
+): (...args: Parameters<T>) => void {
+  let inThrottle = false
+
+  return function (...args: Parameters<T>) {
+    if (!inThrottle) {
+      func(...args)
+      inThrottle = true
+      setTimeout(() => (inThrottle = false), limitMs)
+    }
+  }
+}
+
+/**
+ * Deep equality check for objects
+ */
+export function deepEqual(obj1: any, obj2: any): boolean {
+  if (obj1 === obj2) return true
+
+  if (typeof obj1 !== 'object' || typeof obj2 !== 'object' || obj1 === null || obj2 === null) {
+    return false
+  }
+
+  const keys1 = Object.keys(obj1)
+  const keys2 = Object.keys(obj2)
+
+  if (keys1.length !== keys2.length) return false
+
+  for (const key of keys1) {
+    if (!keys2.includes(key) || !deepEqual(obj1[key], obj2[key])) {
+      return false
+    }
+  }
+
+  return true
+}
+
+/**
+ * Generates a unique ID
+ */
+export function generateId(): string {
+  return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+}
+
+/**
+ * Sleep utility for async operations
+ */
+export function sleep(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
