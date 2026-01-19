@@ -242,3 +242,55 @@ export function parseDate(dateString: string): Date | null {
 export function isValidDate(date: any): boolean {
     return date instanceof Date && !isNaN(date.getTime())
 }
+
+/**
+ * Converts a date to a specific timezone
+ */
+export function toTimezone(date: Date | string, timezone: string): string {
+    const d = new Date(date)
+    return new Intl.DateTimeFormat('en-US', {
+        timeZone: timezone,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+    }).format(d)
+}
+
+/**
+ * Gets the user's timezone
+ */
+export function getUserTimezone(): string {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone
+}
+
+/**
+ * Formats a date range
+ */
+export function formatDateRange(startDate: Date | string, endDate: Date | string): string {
+    const start = new Date(startDate)
+    const end = new Date(endDate)
+
+    if (isToday(start) && isToday(end)) {
+        return `Today, ${formatTime(start)} - ${formatTime(end)}`
+    }
+
+    if (start.toDateString() === end.toDateString()) {
+        return `${formatDate(start, 'short')}, ${formatTime(start)} - ${formatTime(end)}`
+    }
+
+    return `${formatDate(start, 'short')} - ${formatDate(end, 'short')}`
+}
+
+/**
+ * Gets the week number of the year
+ */
+export function getWeekNumber(date: Date | string = new Date()): number {
+    const d = new Date(date)
+    const firstDayOfYear = new Date(d.getFullYear(), 0, 1)
+    const pastDaysOfYear = (d.getTime() - firstDayOfYear.getTime()) / 86400000
+    return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7)
+}
