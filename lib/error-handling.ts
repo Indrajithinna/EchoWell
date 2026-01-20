@@ -30,6 +30,12 @@ export class AuthenticationError extends AppError {
     }
 }
 
+export class ForbiddenError extends AppError {
+    constructor(message: string = 'Access denied') {
+        super(message, 'FORBIDDEN', 403)
+    }
+}
+
 export class NotFoundError extends AppError {
     constructor(resource: string) {
         super(`${resource} not found`, 'NOT_FOUND', 404)
