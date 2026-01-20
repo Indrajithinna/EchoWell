@@ -80,6 +80,20 @@ export function isNullish(value: unknown): value is null | undefined {
 }
 
 /**
+ * Checks if value is defined (not null or undefined)
+ */
+export function isDefined<T>(value: T | null | undefined): value is T {
+    return value !== null && value !== undefined
+}
+
+/**
+ * Checks if value is a function
+ */
+export function isFunction(value: unknown): value is Function {
+    return typeof value === 'function'
+}
+
+/**
  * Checks if value is a valid mood score (1-10)
  */
 export function isMoodScore(value: unknown): value is number {
