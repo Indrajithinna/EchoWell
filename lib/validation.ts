@@ -160,3 +160,23 @@ export function validateUsername(username: string): ValidationResult {
 
     return { isValid: true }
 }
+
+/**
+ * Validates phone number format (basic international format)
+ */
+export function validatePhoneNumber(phoneNumber: string): ValidationResult {
+    const phoneRegex = /^\+?[1-9]\d{7,14}$/
+
+    if (!phoneNumber || phoneNumber.trim().length === 0) {
+        return { isValid: false, error: 'Phone number is required' }
+    }
+
+    // Remove dashes and spaces for validation
+    const cleanNumber = phoneNumber.replace(/[\s-]/g, '')
+
+    if (!phoneRegex.test(cleanNumber)) {
+        return { isValid: false, error: 'Invalid phone number format' }
+    }
+
+    return { isValid: true }
+}
