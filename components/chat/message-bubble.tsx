@@ -4,7 +4,7 @@ import { User, Bot, Clock } from 'lucide-react'
 import ReactMarkdown from 'react-markdown'
 import { formatRelativeTime } from '@/lib/utils'
 
-interface MessageBubbleProps {
+export interface MessageBubbleProps {
   message: {
     role: 'user' | 'assistant'
     content: string
@@ -18,10 +18,14 @@ export default function MessageBubble({ message }: MessageBubbleProps) {
   return (
     <div className={`flex gap-3 ${isUser ? 'flex-row-reverse' : 'flex-row'} animate-fade-in group`}>
       {/* Avatar */}
-      <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${isUser
+      <div
+        className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${isUser
           ? 'bg-gradient-to-br from-calm-500 to-zen-500'
           : 'bg-gradient-to-br from-zen-100 to-calm-100'
-        }`}>
+          }`}
+        aria-label={isUser ? "User Avatar" : "Assistant Avatar"}
+        role="img"
+      >
         {isUser ? (
           <User size={16} className="text-white" />
         ) : (
@@ -32,8 +36,8 @@ export default function MessageBubble({ message }: MessageBubbleProps) {
       {/* Message Content */}
       <div className={`flex-1 flex flex-col max-w-[80%] ${isUser ? 'items-end' : 'items-start'}`}>
         <div className={`px-4 py-3 rounded-2xl ${isUser
-            ? 'bg-gradient-to-r from-calm-500 to-zen-500 text-white rounded-tr-none'
-            : 'bg-white border border-gray-200 text-gray-800 rounded-tl-none shadow-sm'
+          ? 'bg-gradient-to-r from-calm-500 to-zen-500 text-white rounded-tr-none'
+          : 'bg-white border border-gray-200 text-gray-800 rounded-tl-none shadow-sm'
           }`}>
           {isUser ? (
             <p className="text-sm whitespace-pre-wrap">{message.content}</p>
