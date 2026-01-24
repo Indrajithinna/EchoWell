@@ -13,7 +13,9 @@ import {
   Target,
   Calendar,
   Wind,
-  Book
+  Book,
+  Moon,
+  AlertTriangle
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { UserStatsDisplay } from '@/components/gamification/user-stats-display'
@@ -25,6 +27,10 @@ const navigation = [
   { name: 'Music Therapy', href: '/music', icon: Music },
   { name: 'Mindfulness', href: '/exercises', icon: Wind },
   { name: 'Voice Journal', href: '/journal', icon: Book },
+  { name: 'Hope Jar', href: '/community/hope-jar', icon: Heart },
+  { name: 'Dream Decoder', href: '/tools/dreams', icon: Moon },
+  { name: 'CBT Tools', href: '/tools/cbt', icon: Brain },
+  { name: 'SOS Panic', href: '/sos', icon: AlertTriangle },
   { name: 'Goals', href: '/goals', icon: Target },
   { name: 'Settings', href: '/settings', icon: Settings },
 ]

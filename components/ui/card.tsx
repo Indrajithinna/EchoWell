@@ -1,6 +1,6 @@
 import { HTMLAttributes, forwardRef } from 'react'
 
-interface CardProps extends HTMLAttributes<HTMLDivElement> {}
+interface CardProps extends HTMLAttributes<HTMLDivElement> { }
 
 const Card = forwardRef<HTMLDivElement, CardProps>(
   ({ className = '', children, ...props }, ref) => {
@@ -47,6 +47,21 @@ const CardTitle = forwardRef<HTMLHeadingElement, HTMLAttributes<HTMLHeadingEleme
 )
 CardTitle.displayName = 'CardTitle'
 
+const CardDescription = forwardRef<HTMLParagraphElement, HTMLAttributes<HTMLParagraphElement>>(
+  ({ className = '', children, ...props }, ref) => {
+    return (
+      <p
+        ref={ref}
+        className={`text-sm text-muted-foreground ${className}`}
+        {...props}
+      >
+        {children}
+      </p>
+    )
+  }
+)
+CardDescription.displayName = 'CardDescription'
+
 const CardContent = forwardRef<HTMLDivElement, CardProps>(
   ({ className = '', children, ...props }, ref) => {
     return (
@@ -62,4 +77,19 @@ const CardContent = forwardRef<HTMLDivElement, CardProps>(
 )
 CardContent.displayName = 'CardContent'
 
-export { Card, CardHeader, CardTitle, CardContent }
+const CardFooter = forwardRef<HTMLDivElement, CardProps>(
+  ({ className = '', children, ...props }, ref) => {
+    return (
+      <div
+        ref={ref}
+        className={`flex items-center p-6 pt-0 ${className}`}
+        {...props}
+      >
+        {children}
+      </div>
+    )
+  }
+)
+CardFooter.displayName = 'CardFooter'
+
+export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent }
