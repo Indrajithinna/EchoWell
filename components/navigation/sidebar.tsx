@@ -11,19 +11,22 @@ import {
   Settings,
   LogOut,
   Target,
-  Calendar
+  Calendar,
+  Wind,
+  Book
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { UserStatsDisplay } from '@/components/gamification/user-stats-display'
 
 const navigation = [
   { name: 'Overview', href: '/overview', icon: Calendar },
   { name: 'Chat', href: '/chat', icon: MessageSquare },
   { name: 'Mood Tracker', href: '/mood', icon: Heart },
   { name: 'Music Therapy', href: '/music', icon: Music },
-  { name: 'Generated Music', href: '/music/generated', icon: Music },
+  { name: 'Mindfulness', href: '/exercises', icon: Wind },
+  { name: 'Voice Journal', href: '/journal', icon: Book },
   { name: 'Goals', href: '/goals', icon: Target },
   { name: 'Settings', href: '/settings', icon: Settings },
-  { name: 'Model Config', href: '/settings/model-config', icon: Settings },
 ]
 
 export default function Sidebar() {
@@ -43,10 +46,15 @@ export default function Sidebar() {
         </Link>
       </div>
 
+      {/* Gamification Stats */}
+      <div className="px-6 pt-4 pb-2">
+        <UserStatsDisplay />
+      </div>
+
       {/* Navigation */}
-      <nav className="flex-1 p-4 space-y-1" role="navigation" aria-label="Main Navigation">
+      <nav className="flex-1 p-4 space-y-1 overflow-y-auto" role="navigation" aria-label="Main Navigation">
         {navigation.map((item) => {
-          const isActive = pathname === item.href
+          const isActive = pathname === item.href || pathname.startsWith(item.href) && item.href !== '/'
           const Icon = item.icon
 
           return (
