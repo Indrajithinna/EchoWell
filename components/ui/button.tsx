@@ -1,10 +1,13 @@
 import { ButtonHTMLAttributes, forwardRef } from 'react'
+import { Slot } from '@radix-ui/react-slot'
 import { Loader2 } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'default' | 'outline' | 'ghost' | 'destructive' | 'secondary'
   size?: 'default' | 'sm' | 'lg' | 'icon'
   isLoading?: boolean
+  asChild?: boolean
 }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -13,10 +16,14 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     variant = 'default',
     size = 'default',
     isLoading = false,
+    asChild = false,
     children,
     disabled,
     ...props
   }, ref) => {
+    const Comp = asChild ? Slot : "button"
+
+    // Using cn utility if available for cleaner class merging
     const baseStyles = 'inline-flex items-center justify-center rounded-lg font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed'
 
     const variants = {
@@ -34,16 +41,20 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       icon: 'p-2',
     }
 
+    // If asChild is true, we don't pass isLoading logic inside the slot automatically usually, 
+    // but here we are strict. If asChild, we assume children handles content.
+    // However, mixing isLoading + asChild is tricky. We'll disable loading spinner if asChild for safety.
+
     return (
-      <button
+      <Comp
         ref={ref}
         disabled={disabled || isLoading}
-        className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`}
+        className={cn(baseStyles, variants[variant], sizes[size], className)}
         {...props}
       >
-        {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+        {!asChild && isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
         {children}
-      </button>
+      </Comp>
     )
   }
 )
