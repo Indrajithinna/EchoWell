@@ -5,35 +5,11 @@ import { usePathname } from 'next/navigation'
 import { signOut } from 'next-auth/react'
 import {
   Brain,
-  MessageSquare,
-  Music,
-  Heart,
-  Settings,
   LogOut,
-  Target,
-  Calendar,
-  Wind,
-  Book,
-  Moon,
-  AlertTriangle
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { UserStatsDisplay } from '@/components/gamification/user-stats-display'
-
-const navigation = [
-  { name: 'Overview', href: '/overview', icon: Calendar },
-  { name: 'Chat', href: '/chat', icon: MessageSquare },
-  { name: 'Mood Tracker', href: '/mood', icon: Heart },
-  { name: 'Music Therapy', href: '/music', icon: Music },
-  { name: 'Mindfulness', href: '/exercises', icon: Wind },
-  { name: 'Voice Journal', href: '/journal', icon: Book },
-  { name: 'Hope Jar', href: '/community/hope-jar', icon: Heart },
-  { name: 'Dream Decoder', href: '/tools/dreams', icon: Moon },
-  { name: 'CBT Tools', href: '/tools/cbt', icon: Brain },
-  { name: 'SOS Panic', href: '/sos', icon: AlertTriangle },
-  { name: 'Goals', href: '/goals', icon: Target },
-  { name: 'Settings', href: '/settings', icon: Settings },
-]
+import { SIDEBAR_NAVIGATION } from '@/config/navigation'
 
 export default function Sidebar() {
   const pathname = usePathname()
@@ -59,7 +35,7 @@ export default function Sidebar() {
 
       {/* Navigation */}
       <nav className="flex-1 p-4 space-y-1 overflow-y-auto" role="navigation" aria-label="Main Navigation">
-        {navigation.map((item) => {
+        {SIDEBAR_NAVIGATION.map((item) => {
           const isActive = pathname === item.href || pathname.startsWith(item.href) && item.href !== '/'
           const Icon = item.icon
 
