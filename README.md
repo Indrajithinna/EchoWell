@@ -27,6 +27,10 @@ It combines **Google Gemini Pro** for logical reasoning with **OpenAI Whisper** 
 
 * **🎭 Tone-Adaptive AI:** Detects user emotions (anxiety, sadness, stress) via Web Audio API and adjusts the AI's persona in real-time.
 * **🗣️ Natural Voice Interface:** Full duplex voice-to-voice interaction using Whisper (STT) and OpenAI TTS.
+* **🧘 Mindfulness Studio:** 4-7-8 Breathing exercises and Focus Timers with ambient soundscapes.
+* **🧠 CBT & Tools:** Interactive Cognitive Behavioral Therapy thought challenger, Dream Journal, and Grounding techniques.
+* **🏆 Gamification:** Streak tracking, points system, and achievements to encourage daily wellness.
+* **🏺 Hope Jar:** A community feature to share anonymous messages of hope and support.
 * **🎵 Dynamic Music Therapy:** Integrates with Spotify and custom AI models to generate therapeutic soundscapes based on current mood.
 * **📊 Wellness Analytics:** Tracks mental health patterns over time using Supabase to visualize progress and emotional trends.
 * **🔐 Secure & Private:** Authenticated via NextAuth.js with data privacy at the core.
