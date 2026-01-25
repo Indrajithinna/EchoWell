@@ -135,11 +135,16 @@ export default function SOSPage() {
             )}
 
             {/* Emergency Footer */}
-            <div className="fixed bottom-8 text-center w-full z-10">
-                <p className="text-slate-500 text-sm mb-2">If you are in immediate danger:</p>
-                <Button variant="destructive" className="gap-2">
-                    <Phone size={16} /> Call Emergency Services (911)
-                </Button>
+            <div className="fixed bottom-8 text-center w-full z-10 space-y-3 px-4">
+                <p className="text-slate-500 text-sm">If you are in immediate danger:</p>
+                <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
+                    <Button variant="destructive" className="gap-2 w-full sm:w-auto">
+                        <Phone size={16} /> Call Emergency Services (911)
+                    </Button>
+                    <Button variant="outline" className="gap-2 w-full sm:w-auto bg-slate-900 border-slate-700 text-slate-300 hover:bg-slate-800" asChild>
+                        <a href="https://google.com">Quick Exit (Google)</a>
+                    </Button>
+                </div>
             </div>
         </div>
     )
