@@ -68,15 +68,15 @@ export default function HopeJarPage() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: i * 0.1 }}
                     >
-                        <Card className={`h-full hover:shadow-lg transition-shadow border ${msg.theme}`}>
-                            <CardContent className="p-6 flex flex-col justify-between h-full min-h-[160px]">
-                                <p className="text-lg font-medium text-slate-700 leading-relaxed font-handwriting">
+                        <Card className={`h-full hover:shadow-xl transition-all duration-300 border-0 ${msg.theme} hover:-translate-y-1`}>
+                            <CardContent className="p-6 flex flex-col justify-between h-full min-h-[180px]">
+                                <p className="text-lg font-medium text-slate-700 leading-relaxed font-handwriting italic">
                                     "{msg.text}"
                                 </p>
-                                <div className="flex items-center justify-between mt-6 text-sm text-slate-400">
-                                    <span className="text-xs">Anonymous</span>
-                                    <button className="flex items-center gap-1 hover:text-red-500 transition-colors">
-                                        <Heart className="w-4 h-4" /> {msg.likes}
+                                <div className="flex items-center justify-between mt-6 pt-4 border-t border-black/5 text-sm text-slate-500">
+                                    <span className="text-xs font-semibold uppercase tracking-wider opacity-70">Anonymous</span>
+                                    <button className="flex items-center gap-1.5 hover:text-red-500 transition-colors group">
+                                        <Heart className="w-4 h-4 group-hover:fill-current" /> {msg.likes}
                                     </button>
                                 </div>
                             </CardContent>
