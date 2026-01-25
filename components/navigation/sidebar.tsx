@@ -49,7 +49,12 @@ export default function Sidebar() {
                 }`}
             >
               <Icon size={20} />
-              <span className="font-medium">{item.name}</span>
+              <span className="font-medium flex-1">{item.name}</span>
+              {'badge' in item && item.badge && (
+                <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-rose-600 bg-rose-50 rounded-full border border-rose-100">
+                  {item.badge as string}
+                </span>
+              )}
             </Link>
           )
         })}
