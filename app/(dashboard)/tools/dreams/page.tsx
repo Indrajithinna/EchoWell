@@ -28,6 +28,14 @@ export default function DreamJournalPage() {
                         <CardDescription>Describe what you remember. The AI will analyze themes.</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
+                        <div className="grid gap-2">
+                            <label className="text-sm font-medium text-slate-700">Date of Dream</label>
+                            <input
+                                type="date"
+                                className="flex h-10 w-full rounded-md border border-slate-200 bg-white px-3 py-2 text-sm ring-offset-white placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
+                                defaultValue={new Date().toISOString().split('T')[0]}
+                            />
+                        </div>
                         <Textarea
                             className="min-h-[200px] border-slate-200"
                             placeholder="I was flying over a city, but my wings felt heavy..."
